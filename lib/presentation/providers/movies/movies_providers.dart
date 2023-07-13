@@ -28,6 +28,8 @@ final topRatedMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>
 });
 
 
+
+
 typedef MovieCallBack = Future<List<Movie>> Function({int page}); // objetivo: definir el caso de uso
 
 class MoviesNotifier extends StateNotifier<List<Movie>>{

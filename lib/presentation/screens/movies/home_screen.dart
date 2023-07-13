@@ -11,12 +11,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: _HomeView(),
+      body: _HomeView(), 
       bottomNavigationBar: CustomBottomNavigation()
-   );
+    );
   }
 }
-
 
 class _HomeView extends ConsumerStatefulWidget {
   const _HomeView();
@@ -35,32 +34,60 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
-
-    // final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideShowProvider);
 
-    if(slideShowMovies.isEmpty) return const Center(child: CircularProgressIndicator());
+    if (slideShowMovies.isEmpty) return const Center(child: CircularProgressIndicator());
 
-    return Column(
-      children: [
+    return CustomScrollView(
+      slivers: [
 
-        const CustomAppBar(),
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppBar(),
+            centerTitle: true,
+          ),
+        ),
 
-        MoviesSlideShow(movies: slideShowMovies),
-
-        // Expanded( // uso expanded para no usar el sizebox o container (otras opciones: sizebox.expande, sizebox.shrink)
-        //   child: ListView.builder(
-        //     itemCount: nowPlayingMovies.length,
-        //     itemBuilder: (context, index) {
-        //       final movie = nowPlayingMovies[index];
-        //       return ListTile(
-        //         title: Text(movie.title),
-        //       );
-        //     },
-        //   ),
-        // ),
-
-      ],
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+              
+                // const CustomAppBar(),
+                MoviesSlideShow(movies: slideShowMovies),
+                
+                MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'En cines',
+                    subTitle: 'Lunes 20',
+                    loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage()
+                ),
+                MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Próximamente',
+                    subTitle: 'En este mes',
+                    loadNextPage: () =>ref.read(nowPlayingMoviesProvider.notifier).loadNextPage()
+                ),
+                MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Populares',
+                    // subTitle: 'En este mes',
+                    loadNextPage: () =>ref.read(nowPlayingMoviesProvider.notifier).loadNextPage()
+                ),
+                MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Mejor calificadas',
+                    subTitle: 'Desde siempre',
+                    loadNextPage: () =>ref.read(nowPlayingMoviesProvider.notifier).loadNextPage()
+                ),
+                const SizedBox(height: 10)
+              ],
+            );
+          }, childCount: 1)
+        )
+      ]
     );
   }
 }

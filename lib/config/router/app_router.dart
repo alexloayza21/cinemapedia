@@ -12,7 +12,7 @@ final appRouter = GoRouter(
       builder: (context, state) => const HomeScreen(),
       routes: [
         GoRoute(
-          path: 'movie/:id',
+          path: 'movie/:id', // se escribe dentro para las webs, para poder volver al inicio 
           name: MovieScreen.name,
           builder: (context, state) {
             final moviId = state.pathParameters['id'] ?? 'no-id';

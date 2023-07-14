@@ -5,7 +5,7 @@ import 'package:cinemapedia/infrastructure/repositories/movie_respository_impl.d
 // este repositorio es inmutable
 final movieRepositoryProvider = Provider((ref) {
   // final movie = MoviedbDatasource();
-  // return MovieRepositoryImple( movie);
+  // return MovieRepositoryImple(movie);
 
   return MovieRepositoryImple(MoviedbDatasource());
 });

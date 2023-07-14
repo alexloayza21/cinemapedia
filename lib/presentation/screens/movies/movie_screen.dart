@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -39,12 +40,14 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
         slivers: [
+
           _CustomSliverAppBar(movie: movie),
+
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) => _MovieDetails(movie: movie),
             childCount: 1
-          )
-          )
+          ))
+
         ],
       )
    );
@@ -152,6 +155,7 @@ class _ActorsByMovie extends ConsumerWidget {
         itemCount: actors.length,
         itemBuilder: (context, index) {
           final actor = actors[index];
+
           return Container(
             padding: const EdgeInsets.all(8.0),
             width: 125,
@@ -161,13 +165,15 @@ class _ActorsByMovie extends ConsumerWidget {
 
                 //* Actor Photo
 
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    actor.profilePath,
-                    height: 180,
-                    width: 135,
-                    fit: BoxFit.cover,
+                FadeInRight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 180,
+                      width: 135,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
 
@@ -216,10 +222,16 @@ class _CustomSliverAppBar extends StatelessWidget {
         // ),
         background: Stack(
           children: [
+
+            //* IMAGEN APPBAR
             SizedBox.expand(
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) return const SizedBox();
+                  return FadeIn(child: child);
+                },
               ),
             ),
 

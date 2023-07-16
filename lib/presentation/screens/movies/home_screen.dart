@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
+      body: IndexedStack( //* otra opción sería usar un PageView para navegar deslizandose
         index: pageIndex,
         children: viewRoutes,
       ), 

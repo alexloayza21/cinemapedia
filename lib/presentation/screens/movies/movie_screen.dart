@@ -212,6 +212,13 @@ class _CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          onPressed: (){}, 
+          icon: const Icon(Icons.favorite_border)
+          // icon: const Icon(Icons.favorite, color: Colors.red,),
+        )
+      ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -235,39 +242,65 @@ class _CustomSliverAppBar extends StatelessWidget {
               ),
             ),
 
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.7, 1.0], // el gradiente empieza desde el 70% hasta llegar abajo 
-                    colors: [
-                      Colors.transparent,
-                      Colors.black87
-                    ]
-                  )
-                )
-              ),
+            const _CustomGradiant(
+              begin: Alignment.topCenter, 
+              end: Alignment.bottomCenter, 
+              stops: [0.8 , 1.0], //* el gradiente toma desde el 80% de la pantalla hasta el final
+              colors: [
+                Colors.transparent, 
+                Colors.black87,
+              ] //* en este caso el 80% de la pantalla es transparente y el resto es negro
             ),
 
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    stops: [0, 0.3], // el gradiente empieza desde el 70% hasta llegar abajo 
-                    colors: [
-                      Colors.black87,
-                      Colors.transparent,
-                    ]
-                  )
-                )
-              ),
+            const _CustomGradiant(
+              begin: Alignment.topLeft, 
+              end: Alignment.center, 
+              stops: [0 , 0.3], 
+              colors: [
+                Colors.black54,
+                Colors.transparent,
+              ]
+            ),
+
+            const _CustomGradiant(
+              begin: Alignment.topRight, 
+              end: Alignment.center, 
+              stops: [0 , 0.3], 
+              colors: [
+                Colors.black54,
+                Colors.transparent,
+              ]
             ),
 
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CustomGradiant extends StatelessWidget {
+  const _CustomGradiant({
+    required this.begin, required this.end, required this.stops, required this.colors,
+  });
+
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+  final List<double> stops;
+  final List<Color> colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: begin,
+            end: end,
+            stops: stops, // el gradiente empieza desde el 70% hasta llegar abajo 
+            colors: colors
+          )
+        )
       ),
     );
   }

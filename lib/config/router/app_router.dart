@@ -14,8 +14,8 @@ final appRouter = GoRouter(
         return HomeScreen(pageIndex: pageIndex);
       },
       routes: [
-        GoRoute(
-          path: 'movie/:id', // se escribe dentro para las webs, para poder volver al inicio 
+        GoRoute(// se escribe dentro para las webs, para poder volver al inicio 
+          path: 'movie/:id', 
           name: MovieScreen.name,
           builder: (context, state) {
             final moviId = state.pathParameters['id'] ?? 'no-id';

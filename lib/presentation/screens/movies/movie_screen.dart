@@ -221,22 +221,18 @@ class _CustomSliverAppBar extends ConsumerWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-          onPressed: () {
-            ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
+          onPressed: () async{
+            // ref.read(localStorageRepositoryProvider).toggleFavorite(movie);
+            await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie);
+            
+            ref.invalidate(isFavoriteProvider(movie.id)); //*antes no cambiaba a la primera y habia que darle varias veces, la solucion era el async y await
+            //* esto invalida el estado del provider y lo regresa al valor inicial, osea que al darle y cambie el estado automaticamente se redibujará
           }, 
           icon: isFavoriteFuture.when(
             loading: () => const CircularProgressIndicator(strokeWidth: 2),
-            data: (isFavorite) { 
-              //* en la clase ponia esto dentro del onPressed, pero al darle al botón no cambiaba a la primera,
-              //* habia que darle mas veces para ver el cambio*/
-              ref.invalidate(isFavoriteProvider(movie.id)); 
-              //* esto invalida el estado del provider y lo regresa al valor inicial, osea que al darle y cambie el estado automaticamente se redibujará
-              
-              if (isFavorite) {
-                return const Icon(Icons.favorite, color: Colors.red,);
-              }
-              return const Icon(Icons.favorite_border);
-            },
+            data: (isFavorite) => isFavorite 
+              ? const Icon( Icons.favorite_rounded, color: Colors.red )
+              : const Icon( Icons.favorite_border ), 
             error: (error, stackTrace) => throw UnimplementedError(), 
           )
             

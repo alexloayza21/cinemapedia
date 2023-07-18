@@ -197,16 +197,23 @@ class _ActorsByMovie extends ConsumerWidget {
 }
 
 
+//*-----------------------PROVIDER----------------------------
+final isFavoriteProvider = FutureProvider.family.autoDispose((ref, int movieId) {
 
-class _CustomSliverAppBar extends StatelessWidget {
+  final localStorageRespository = ref.watch(localStorageRepositoryProvider);
+  return localStorageRespository.isMovieFavorite(movieId); //ç* si está en favoritos
+});
+
+class _CustomSliverAppBar extends ConsumerWidget {
   const _CustomSliverAppBar({required this.movie});
 
   final Movie movie;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     final size = MediaQuery.of(context).size;
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
 
     return SliverAppBar(
       backgroundColor: Colors.black,
@@ -214,9 +221,25 @@ class _CustomSliverAppBar extends StatelessWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-          onPressed: (){}, 
-          icon: const Icon(Icons.favorite_border)
-          // icon: const Icon(Icons.favorite, color: Colors.red,),
+          onPressed: () {
+            ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
+          }, 
+          icon: isFavoriteFuture.when(
+            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+            data: (isFavorite) { 
+              //* en la clase ponia esto dentro del onPressed, pero al darle al botón no cambiaba a la primera,
+              //* habia que darle mas veces para ver el cambio*/
+              ref.invalidate(isFavoriteProvider(movie.id)); 
+              //* esto invalida el estado del provider y lo regresa al valor inicial, osea que al darle y cambie el estado automaticamente se redibujará
+              
+              if (isFavorite) {
+                return const Icon(Icons.favorite, color: Colors.red,);
+              }
+              return const Icon(Icons.favorite_border);
+            },
+            error: (error, stackTrace) => throw UnimplementedError(), 
+          )
+            
         )
       ],
       flexibleSpace: FlexibleSpaceBar(
